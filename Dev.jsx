@@ -9,23 +9,41 @@ var selection = doc.selection
 
 //IF THERE IS A FLATS GROUP SELCTED
 if(doc.activeLayer.name == 'FLATS' && doc.activeLayer.typename == 'LayerSet') {
-  //STORE FLATS GROUP
-  var flatGroup = doc.activeLayer
+  //STORE FLATS GROUP AS A DUPLICATE
+  var flatGroup = doc.activeLayer.duplicate()
+
+  //CLEAN MASKS BY DELETING LAYERS ABOVE
+  //FOR EACH LAYER LOOP BACKWARDS 'UP LAYER STACK'
+  for(var i = flatGroup.artLayers.length - 1; i > -1 ; i--) {
+    //LOOP THROW OTHER LAYERS BACKWARDS 'UP LAYER STACK'
+    for(var j = i-1; j > -1 ; j--) {
+      //SELECT NEXT LAYER UP
+      doc.activeLayer = flatGroup.artLayers[j]
+      //MAGIC SELECT
+      magicSelect()
+      //SELECT WORKING LAYER
+      doc.activeLayer = flatGroup.artLayers[i]
+      //DELETE SELECTED
+      selection.clear()
+    }
+    //DESELECT
+    selection.deselect()
+  }
 
   //MAKE CHANNEL MASKS
-  for(var i = 0; i < flatGroup.artLayers.length; i ++) {
+  for(var k = 0; k < flatGroup.artLayers.length; k ++) {
     //SELECT LAYER
-    doc.activeLayer = flatGroup.artLayers[i]
+    doc.activeLayer = flatGroup.artLayers[k]
     //MAGIC SELECT
     magicSelect()
     //SAVE SELECTION
     var newChannel = doc.channels.add()
     //COPY LAYER NAME TO CHANNEL NAME
-    newChannel.name = flatGroup.artLayers[i].name
+    newChannel.name = flatGroup.artLayers[k].name
     //STORE SELECTION IN CHANNEL
     selection.store(newChannel)
     //IF AT LAST LAYER
-    if(flatGroup.artLayers[i] == flatGroup.artLayers[flatGroup.artLayers.length - 1]) {
+    if(flatGroup.artLayers[k] == flatGroup.artLayers[flatGroup.artLayers.length - 1]) {
       //GET COLOR MODE
       var colorMode = doc.mode.toString().replace(/DocumentMode./, "")
       //TURN ON COLOR MODE CHANNELS
@@ -38,20 +56,20 @@ if(doc.activeLayer.name == 'FLATS' && doc.activeLayer.typename == 'LayerSet') {
   }
 
   //CREATE COMBINED FLATS LAYER
-  //DUPLICATE FLAT GROUP
-  var flatLayer = flatGroup.duplicate()
-  //FLATTEN
-  flatLayer = flatLayer.merge()
+  flatLayer = flatGroup.merge()
   //CHANGE NAME TO FLATS
   flatLayer.name = 'FLATS'
   //SELECT FLATS LAYER
   doc.activeLayer = flatLayer
 
+  //ALERT
+  alert('Flat Layer created successfully')
+
 //IF THERE IS NO FLATS GROUP SELECTED
 } else {alert("No \"FLATS\" group could be found, you should place your layers in a group named \"FLATS\" and select it before running the script")}
 
 
-} catch(Error) {debug(Error)}
+} catch(error) {debug(error)}
 
 
 //FUNCTIONS
