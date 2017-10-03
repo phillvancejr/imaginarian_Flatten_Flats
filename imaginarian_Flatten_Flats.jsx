@@ -1,8 +1,7 @@
-#target photoshop
-#include '~/JSXlib/devLib.jsx'
+/** Copyright Phill Vance 'The Imaginarian' 2017
+*** imaginarian_Flatten_Flats ***/
 
-//DEBUG
-try {
+#target photoshop
 
 var doc = app.activeDocument
 var selection = doc.selection
@@ -67,9 +66,6 @@ if(doc.activeLayer.name == 'FLATS' && doc.activeLayer.typename == 'LayerSet') {
 
 //IF THERE IS NO FLATS GROUP SELECTED
 } else {alert("No \"FLATS\" group could be found, you should place your layers in a group named \"FLATS\" and select it before running the script")}
-
-
-} catch(error) {debug(error)}
 
 
 //FUNCTIONS

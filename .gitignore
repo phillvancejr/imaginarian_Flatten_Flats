@@ -29,13 +29,10 @@ Temporary Items
 .apdisk
 
 # Dev file
-# Dev.jsx
+Dev.jsx
 
 # PS test file
 test2.psd
 test.psd
-
-# Temporarily ignore finished file
-imaginarian_Flatten_Flats.jsx
 
 # End of https://www.gitignore.io/api/osx
